@@ -1,0 +1,5 @@
+name: ${local.name}
+version: ${project.version}
+main: org.cyberpwn.fusion.FusionPlugin
+author: cyberpwn
+description: ${local.description}

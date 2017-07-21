@@ -1,0 +1,5 @@
+name: Fusion
+version: 1.0
+main: org.cyberpwn.fusion.FusionPlugin
+author: cyberpwn
+description: Organizes 1.13 Datapacks by creating a registry system that handles resources across multiple bukkit plugins.

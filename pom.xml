@@ -13,10 +13,45 @@
 		<local.basedir>${project.parent.basedir}</local.basedir>
 		<local.repository>${local.basedir}/repository</local.repository>
 		<local.release>${local.basedir}/release/${project.artifactId}</local.release>
+		<local.name>${project.parent.artifactId}</local.name>
+		<local.description>${project.parent.description}</local.description>
 	</properties>
 	<artifactId>FusionCore</artifactId>
 	<name>FusionCore</name>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>*.sql</include>
+					<include>*.txt</include>
+					<include>*.yml</include>
+					<include>**/*.yml</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.zip</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.zip</include>
+					<include>**/*.so</include>
+					<include>**/*.dll</include>
+					<include>**/*.lib</include>
+					<include>**/*.dylib</include>
+					<include>**/*.sl</include>
+				</includes>
+				<excludes>
+					<exclude>*.sql</exclude>
+					<exclude>*.txt</exclude>
+					<exclude>*.yml</exclude>
+					<exclude>**/*.yml</exclude>
+				</excludes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -25,6 +60,47 @@
 				<configuration>
 					<outputDirectory>${local.release}</outputDirectory>
 					<finalName>${project.artifactId}-${project.version}</finalName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.4.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>org.cyberpwn:FusionAPI</include>
+								</includes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>runbatchfile</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>${local.basedir}/scripts/post.bat</executable>
+					<arguments>
+						<argument>C:\Users\cyberpwn\Documents\development\workspace\Fusion\release\FusionCore\FusionCore-${project.version}.jar</argument>
+						<argument>C:\Users\cyberpwn\Documents\development\servers\dynamic\plugins\Fusion.jar</argument>
+					</arguments>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -41,7 +117,8 @@
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 		<repository>
-		
+			<id>fusion-repo</id>
+			<url>https://raw.githubusercontent.com/FusionAPI/Fusion/master/repository/</url>
 		</repository>
 	</repositories>
 	<dependencies>
@@ -50,6 +127,11 @@
 			<artifactId>bukkit</artifactId>
 			<version>1.12-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.cyberpwn</groupId>
+			<artifactId>FusionAPI</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 </project>
