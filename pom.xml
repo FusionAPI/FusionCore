@@ -11,10 +11,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<local.basedir>${project.parent.basedir}</local.basedir>
-		<local.repository>${local.basedir}/repository</local.repository>
-		<local.release>${local.basedir}/release/${project.artifactId}</local.release>
 		<local.name>${project.parent.artifactId}</local.name>
 		<local.description>${project.parent.description}</local.description>
+		<local.release.this>${local.release}\${project.name}</local.release.this>
 	</properties>
 	<artifactId>FusionCore</artifactId>
 	<name>FusionCore</name>
@@ -58,7 +57,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.1</version>
 				<configuration>
-					<outputDirectory>${local.release}</outputDirectory>
+					<outputDirectory>${local.release.this}</outputDirectory>
 					<finalName>${project.artifactId}-${project.version}</finalName>
 				</configuration>
 			</plugin>
@@ -82,33 +81,47 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>runbatchfile</id>
-						<phase>package</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<executable>${local.basedir}/scripts/post.bat</executable>
-					<arguments>
-						<argument>C:\Users\cyberpwn\Documents\development\workspace\Fusion\release\FusionCore\FusionCore-${project.version}.jar</argument>
-						<argument>C:\Users\cyberpwn\Documents\development\servers\dynamic\plugins\Fusion.jar</argument>
-					</arguments>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>dynamic-deployment</id>
+			<activation>
+				<file>
+					<exists>C:\Users\cyberpwn\Documents\development\servers\dynamic\server.properties</exists>
+				</file>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>runbatchfile</id>
+								<phase>package</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<executable>${local.scripts}/copy.bat</executable>
+							<arguments>
+								<argument>${local.release.this}\${project.name}-${project.version}.jar</argument>
+								<argument>C:\Users\cyberpwn\Documents\development\servers\dynamic\plugins\Fusion.jar</argument>
+							</arguments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<distributionManagement>
 		<repository>
 			<id>fusionapi</id>
-			<url>file://C:\Users\cyberpwn\Documents\development\workspace\Fusion\repository</url>
+			<url>file://repository</url>
 		</repository>
 	</distributionManagement>
 	<repositories>
