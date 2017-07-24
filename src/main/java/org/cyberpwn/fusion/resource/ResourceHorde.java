@@ -44,7 +44,7 @@ public class ResourceHorde<T extends FResource> implements Horde<T>
 	public InputStream openStream(String id) throws IOException 
 	{
 		T resource = getResource(id);
-		String path = "/" + resource.getResource().replaceAll("\\.", "/");
+		String path = "/" + resource;
 
 		return Fusion.class.getResourceAsStream(path);
 	}
