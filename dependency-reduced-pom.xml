@@ -87,12 +87,19 @@
                 <goals>
                   <goal>exec</goal>
                 </goals>
+                <configuration>
+                  <executable>${project.parent.basedir}\scripts/copy.bat</executable>
+                  <arguments>
+                    <argument>${project.parent.basedir}\release\FusionCore\FusionCore-1.0.jar</argument>
+                    <argument>C:\Users\cyberpwn\Documents\development\servers\dynamic\plugins\Fusion.jar</argument>
+                  </arguments>
+                </configuration>
               </execution>
             </executions>
             <configuration>
-              <executable>${local.scripts}/copy.bat</executable>
+              <executable>${project.parent.basedir}\scripts/copy.bat</executable>
               <arguments>
-                <argument>${local.release.this}\${project.name}-${project.version}.jar</argument>
+                <argument>${project.parent.basedir}\release\FusionCore\FusionCore-1.0.jar</argument>
                 <argument>C:\Users\cyberpwn\Documents\development\servers\dynamic\plugins\Fusion.jar</argument>
               </arguments>
             </configuration>
